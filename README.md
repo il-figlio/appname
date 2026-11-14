@@ -2,7 +2,7 @@
 
 Check candidate names against Apple's public App Store catalog, from the terminal or the web.
 
-[Search online](https://appname-roguelite.vercel.app)
+[Search online](https://appname-lookup.vercel.app)
 
 ## Install
 
