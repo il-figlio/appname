@@ -32,6 +32,8 @@ python3 -m pip install -e .
 python3 -m unittest discover -s tests -v
 ```
 
+Web results include app icons, screenshot previews, and catalog-checked name alternatives for exact matches.
+
 The buildless web interface is in `public/`; `api/search.py` serves lookups on Vercel. Deploy with `vercel`.
 
 Uses Apple's [Search API](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html). No API key or account required.

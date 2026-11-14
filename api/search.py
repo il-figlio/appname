@@ -14,6 +14,7 @@ from urllib.parse import parse_qs, urlsplit
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import appname
+from suggestions import suggest_names
 
 _CACHE = OrderedDict()
 _LOCK = Lock()
@@ -21,6 +22,36 @@ _LAST_REQUEST = 0.0
 _CACHE_SECONDS = 300
 _MAX_CACHE = 128
 _REQUEST_INTERVAL = 3.1
+
+
+def media_url(value):
+    if not isinstance(value, str) or len(value) > 2048:
+        return None
+    try:
+        url = urlsplit(value)
+        host = url.hostname or ""
+        if url.scheme == "https" and not url.username and not url.password and (
+                host == "mzstatic.com" or host.endswith(".mzstatic.com")):
+            return value
+    except ValueError:
+        pass
+    return None
+
+
+def preview(app):
+    screenshots = []
+    for field in ("screenshotUrls", "ipadScreenshotUrls"):
+        values = app.get(field)
+        if isinstance(values, list):
+            screenshots = list(dict.fromkeys(url for value in values if (url := media_url(value))))[:6]
+        if screenshots:
+            break
+    def text(field, limit):
+        value = app.get(field)
+        return value[:limit] if isinstance(value, str) else ""
+    return {"icon": media_url(app.get("artworkUrl100")) or media_url(app.get("artworkUrl512")),
+            "screenshots": screenshots, "description": text("description", 1600),
+            "category": text("primaryGenreName", 100), "price": text("formattedPrice", 50)}
 
 
 def search(path):
@@ -63,6 +94,11 @@ def search(path):
         if any(not isinstance(item, dict) for item in apps):
             raise ValueError("Unexpected catalog response")
         result = appname.summarize(name, country, platform, apps, source)
+        by_id = {app.get("trackId"): app for app in apps}
+        for match in result["matches"]:
+            match["preview"] = preview(by_id.get(match["id"], {}))
+        if result["status"] == "exact_match":
+            result["suggestions"] = suggest_names(name)
     except (OSError, ValueError, TypeError, KeyError):
         return 502, {"status": "error", "error": "Apple’s catalog could not be reached. Please try again shortly.",
                      "availability": "unconfirmed"}, {}
