@@ -34,6 +34,17 @@ python3 -m unittest discover -s tests -v
 
 Web results include app icons, screenshot previews, and catalog-checked name alternatives for exact matches.
 
-The buildless web interface is in `public/`; `api/search.py` serves lookups on Vercel. Deploy with `vercel`.
+The React frontend uses [shadcn/ui](https://ui.shadcn.com/) with mobile drawers, screenshot carousels, and a searchable storefront picker. `api/search.py` serves lookups on Vercel; the Python CLI stays dependency-free.
+
+```sh
+npm ci
+npm run dev
+npm test
+npm run build
+```
+
+Use `vercel dev` for the frontend and Python API together, or run the API on port 8000 while using Vite. Deploy with `vercel --prod`.
+
+Interaction and responsive-layout decisions were informed by [Vercel UI SDK](https://github.com/vercel-labs/ui) and [Expo Exact](https://github.com/expo/exact).
 
 Uses Apple's [Search API](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html). No API key or account required.

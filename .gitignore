@@ -9,3 +9,5 @@ dist/
 .DS_Store
 checks/
 .vercel
+node_modules/
+coverage/
