@@ -16,7 +16,7 @@ function respond(body = result, status = 200) {
   return fetch
 }
 async function search() {
-  fireEvent.change(screen.getByLabelText('Candidate name'), { target: { value: 'Cradle' } })
+  fireEvent.change(screen.getByLabelText('App name'), { target: { value: 'Cradle' } })
   fireEvent.submit(screen.getByRole('button', { name: 'Search name' }).closest('form')!)
   await screen.findByText('Exact match found')
 }
@@ -42,7 +42,7 @@ describe('Appname interface', () => {
   it('retains a visible failure instead of claiming an empty catalog', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ status: 'error', error: 'Apple is offline' }), { status: 502 })))
     render(<App />)
-    fireEvent.change(screen.getByLabelText('Candidate name'), { target: { value: 'Cradle' } })
+    fireEvent.change(screen.getByLabelText('App name'), { target: { value: 'Cradle' } })
     fireEvent.submit(screen.getByRole('button', { name: 'Search name' }).closest('form')!)
     expect(await screen.findByRole('alert')).toHaveTextContent('Apple is offline')
     expect(screen.queryByText('No public matches found.')).not.toBeInTheDocument()
@@ -60,8 +60,8 @@ describe('Appname interface', () => {
     render(<App />); await search()
     await screen.findByText('Nestling')
     fireEvent.click(screen.getByRole('button', { name: 'Clear name' }))
-    expect(screen.getByLabelText('Candidate name')).toHaveFocus()
-    expect(screen.getByText('Waiting for a name')).toBeInTheDocument()
+    expect(screen.getByLabelText('App name')).toHaveFocus()
+    expect(screen.getByText('Your next name starts here')).toBeInTheDocument()
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(pending.mock.calls[0][1].aborted).toBe(true)
   })

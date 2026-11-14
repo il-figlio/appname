@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
-import { AlertCircle, ArrowUpRight, Terminal, Info, LoaderCircle, Search, X } from 'lucide-react'
+import { AlertCircle, ChevronRight, Terminal, Sparkles, Info, LoaderCircle, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -73,16 +73,16 @@ export default function App() {
   const status = result?.status === 'exact_match' ? 'Exact match found' : result?.status === 'similar_matches' ? 'Similar names found' : 'No public match'
 
   return <div className="site-shell">
-    <header className="site-header"><a className="brand" href="/" aria-label="appname home"><span aria-hidden="true">[a]</span>appname</a><Button variant="ghost" asChild className="github-link"><a href="https://github.com/il-figlio/appname" target="_blank" rel="noopener noreferrer"><Terminal aria-hidden="true" />Get the CLI<ArrowUpRight aria-hidden="true" /></a></Button></header>
+    <header className="site-header"><a className="brand" href="/" aria-label="appname home"><span aria-hidden="true">a</span>appname</a><Button variant="ghost" asChild className="github-link"><a href="https://github.com/il-figlio/appname" target="_blank" rel="noopener noreferrer"><Terminal aria-hidden="true" />Get the CLI<ChevronRight className="size-3.5" aria-hidden="true" /></a></Button></header>
     <main>
-      <section className="intro" aria-labelledby="page-title"><p className="eyebrow">[ App Store name lookup ]</p><h1 id="page-title">App names,<br />before you ship.</h1><p>Compare your next app name against Apple’s public catalog. Preview what’s out there, then find another direction.</p></section>
+      <section className="intro" aria-labelledby="page-title"><p className="eyebrow">App Store name finder</p><h1 id="page-title">Find a name for<br />your next app.</h1><p>Have a name in mind? See what’s already on the App Store, take a look around, and discover a few fresh ideas.</p></section>
       <section className="search-section" aria-label="Search the App Store">
         <Card className="search-card"><CardContent><form onSubmit={submit}>
-          <label className="field-label" htmlFor="name">Candidate name</label>
-          <div className="search-line"><div className="name-field"><Input ref={inputRef} id="name" name="name" value={name} onChange={event => setName(event.target.value)} placeholder="Enter an app name" autoComplete="off" autoCapitalize="words" enterKeyHint="search" spellCheck={false} minLength={2} maxLength={30} required aria-describedby="catalog-notice" className="name-input" />{name && <Button variant="ghost" size="icon" type="button" className="clear-search" aria-label="Clear name" onClick={clear}><X /></Button>}</div><Button type="submit" disabled={loading} className="search-button">{loading ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Search aria-hidden="true" />}{loading ? 'Searching…' : 'Search name'}</Button></div>
+          <label className="field-label" htmlFor="name">App name</label>
+          <div className="search-line"><div className="name-field"><Input ref={inputRef} id="name" name="name" value={name} onChange={event => setName(event.target.value)} placeholder="e.g. Nestling" autoComplete="off" autoCapitalize="words" enterKeyHint="search" spellCheck={false} minLength={2} maxLength={30} required aria-describedby="catalog-notice" className="name-input" />{name && <Button variant="ghost" size="icon" type="button" className="clear-search" aria-label="Clear name" onClick={clear}><X /></Button>}</div><Button type="submit" disabled={loading} className="search-button">{loading ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Search aria-hidden="true" />}{loading ? 'Searching…' : 'Search name'}</Button></div>
           <div className="search-options"><div className="platform-field"><span className="option-label" id="platform-label">App Store</span><ToggleGroup type="single" value={platform} onValueChange={value => { if (value === 'ios' || value === 'mac') setPlatform(value) }} variant="outline" className="platform-toggle" aria-labelledby="platform-label"><ToggleGroupItem value="ios" aria-label="iPhone and iPad">iPhone & iPad</ToggleGroupItem><ToggleGroupItem value="mac" aria-label="Mac App Store">Mac</ToggleGroupItem></ToggleGroup></div><div className="country-field"><span className="option-label">Storefront</span><CountryPicker value={country} onChange={setCountry} /></div></div>
         </form></CardContent></Card>
-        <p className="catalog-notice" id="catalog-notice"><Info className="size-4 shrink-0" aria-hidden="true" /><span><strong>A catalog search, not a reservation check.</strong> Unpublished or reserved names may not appear. Confirm availability in App Store Connect.</span></p>
+        <p className="catalog-notice" id="catalog-notice"><Info className="size-4 shrink-0" aria-hidden="true" /><span><strong>A helpful first check.</strong> Reserved or unpublished names may be missing. Confirm your choice in App Store Connect.</span></p>
       </section>
       <section className="results-section" aria-label="Search results" aria-busy={loading}>
         {loading ? <div role="status" aria-label="Searching Apple’s catalog"><div className="loading-label"><LoaderCircle className="size-4 animate-spin" aria-hidden="true" />Searching Apple’s catalog…</div><div className="results-grid">{[0,1,2,3].map(key => <Card className="skeleton-card" key={key}><CardContent><div className="flex gap-3"><Skeleton className="size-12 shrink-0 rounded-lg" /><div className="flex-1 space-y-3"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-3 w-1/2" /></div></div><Skeleton className="mt-7 h-10 w-full" /></CardContent></Card>)}</div></div>
@@ -92,10 +92,10 @@ export default function App() {
           {Boolean(result.suggestions?.length) && <Suggestions key={`${result.query}-${result.country}-${result.platform}-${result.checked_at}`} data={result} onExplore={query => { void search(query) }} />}
           {result.matches.length ? <><div className="results-grid">{result.matches.slice(0, shown).map(match => <AppCard key={match.id ?? match.name} match={match} />)}</div>{shown < result.matches.length && <div className="more-results"><Button type="button" variant="outline" onClick={() => setShown(value => value + 8)}>Show more matches ({result.matches.length - shown} remaining)</Button></div>}</> : <Card className="empty-card"><CardContent><h3>No public matches found.</h3><p>This search found no exact or similar titles. Reserved, unpublished, and region-limited names may be missing. Confirm your name in App Store Connect.</p></CardContent></Card>}
           {result.search_limit_reached && <p className="fine-print">Apple returned its 200-result limit. This search may be incomplete.</p>}
-        </> : <div className="initial-state"><span aria-hidden="true">[ · · · ]</span><h2>Waiting for a name</h2><p>Search one name at a time. Exact and similar titles will appear here.</p></div>}
+        </> : <div className="initial-state"><span className="initial-icon" aria-hidden="true"><Sparkles className="size-5" /></span><h2>Your next name starts here</h2><p>Try a name you like. We’ll help you see what’s out there.</p><Button type="button" variant="ghost" className="example-search" onClick={() => { void search({ name: 'Cradle', country, platform }) }}>Try a search<ChevronRight className="size-3.5" aria-hidden="true" /></Button></div>}
       </section>
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{result ? `${result.matches.length} exact or similar titles found for ${result.query}. Name availability is unconfirmed.` : ''}</div>
     </main>
-    <footer className="site-footer"><div><span>in your terminal</span><code>appname check "Your Name"</code></div><span>public catalog · no account required</span></footer>
+    <footer className="site-footer"><div><span>Prefer the terminal?</span><code>appname check "Your Name"</code></div><span>public catalog · no account required</span></footer>
   </div>
 }

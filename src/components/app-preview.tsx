@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ExternalLink, ImageOff, X } from 'lucide-react'
+import { ExternalLink, ImageOff, X, ChevronRight } from 'lucide-react'
 import type { Match } from '@/lib/types'
 import { safeURL } from '@/lib/search'
 import { useMobile } from '@/hooks/use-mobile'
@@ -34,14 +34,14 @@ function PreviewBody({ match }: { match: Match }) {
       <div className="carousel-controls"><p>Swipe to browse · tap to enlarge</p><div><CarouselPrevious className="static size-11 translate-y-0" /><CarouselNext className="static size-11 translate-y-0" /></div></div>
     </Carousel> : <div className="preview-empty"><ImageOff className="size-5" aria-hidden="true" /><p>{failed.length ? 'Screenshots could not be loaded.' : 'No screenshots in Apple’s catalog for this listing.'}</p></div>}
     {match.preview?.description && <p className="listing-description">{match.preview.description}</p>}
-    {store && <Button asChild className="store-action"><a href={store} target="_blank" rel="noopener noreferrer">Open in App Store <ExternalLink aria-hidden="true" /></a></Button>}
+    {store && <Button asChild className="store-action"><a href={store} target="_blank" rel="noopener noreferrer">Open in App Store <ExternalLink className="size-3.5" aria-hidden="true" /></a></Button>}
   </div>
 }
 
 function Preview({ match }: { match: Match }) {
   const mobile = useMobile()
   const [open, setOpen] = useState(false)
-  const trigger = <Button type="button" variant="outline" className="preview-trigger" aria-label={`Preview ${match.name}`}>App preview <span aria-hidden="true">↗</span></Button>
+  const trigger = <Button type="button" variant="outline" className="preview-trigger" aria-label={`Preview ${match.name}`}>App preview <ChevronRight className="size-3.5" aria-hidden="true" /></Button>
   const meta = [match.developer, match.preview?.category, match.preview?.price].filter(Boolean).join(' · ')
   if (mobile) return <Drawer open={open} onOpenChange={setOpen}>
     <DrawerTrigger asChild>{trigger}</DrawerTrigger>
