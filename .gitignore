@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+results*.json
+*.egg-info/
+build/
+dist/
+.venv/
+.vercel/
+.DS_Store
+checks/
+.vercel

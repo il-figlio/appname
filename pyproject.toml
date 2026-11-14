@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "appname-cli"
+version = "0.1.0"
+description = "Compare candidate names against Apple's public App Store catalog"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+classifiers = [
+  "Environment :: Console",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.scripts]
+appname = "appname:main"
+
+[project.urls]
+Repository = "https://github.com/il-figlio/appname"
+
+[tool.setuptools]
+py-modules = ["appname"]
