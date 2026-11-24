@@ -48,3 +48,10 @@ Use `vercel dev` for the frontend and Python API together, or run the API on por
 Interaction and responsive-layout decisions were informed by [Vercel UI SDK](https://github.com/vercel-labs/ui) and [Expo Exact](https://github.com/expo/exact).
 
 Uses Apple's [Search API](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html). No API key or account required.
+
+## Sibling search pages (preview)
+
+- `/username`: GitHub, Bluesky, npm and PyPI public record checks.
+- `/domainname`: IANA-bootstrapped RDAP checks for selected extensions.
+
+Both reuse the existing React components and CSS. No public record is not confirmation of claimability. No registrar pricing or authenticated social APIs are included in this first pass.
